@@ -32,7 +32,6 @@ $(function() {
      * and that the URL is not empty.
      */
     it('are URL defined', function() {
-			expect(allFeeds).toBeDefined();
 			allFeeds.forEach(function(feed) {
 				expect(feed.url).toBeDefined();
 			});
@@ -44,7 +43,6 @@ $(function() {
      * and that the name is not empty.
      */
 		it('are name defined', function() {
-			expect(allFeeds).toBeDefined();
 			allFeeds.forEach(function(feed) {
 				expect(feed.name).toBeDefined();
 				expect(feed.name).not.toBe("");
@@ -60,8 +58,13 @@ $(function() {
      * the CSS to determine how we're performing the
      * hiding/showing of the menu element.
      */
+		 var body, menuIconLink;
+		 beforeEach(function() {
+			body = $("body");
+			menuIconLink = $(".menu-icon-link");
+		 });
 		 it("is hidden", function() {
-			expect($("body")).toHaveClass("menu-hidden")
+			expect(body).toHaveClass("menu-hidden")
 		 });
 
 
@@ -71,10 +74,10 @@ $(function() {
     * clicked and does it hide when clicked again.
     */
 		it("is toggled on click", function() {
-			$(".menu-icon-link").trigger("click");
-			expect($("body")).not.toHaveClass("menu-hidden");
-			$(".menu-icon-link").trigger("click");
-			expect($("body")).toHaveClass("menu-hidden");
+			$(menuIconLink).trigger("click");
+			expect(body).not.toHaveClass("menu-hidden");
+			$(menuIconLink).trigger("click");
+			expect(body).toHaveClass("menu-hidden");
 		});
 	});
 
@@ -86,14 +89,16 @@ $(function() {
      * Remember, loadFeed() is asynchronous so this test will require
      * the use of Jasmine's beforeEach and asynchronous done() function.
      */
+		var feeds;
 		beforeEach(function(done) {
+			var feeds = $(".feed > .entry-link");
 			loadFeed(0, function() {
 				done();
 			});
 		});
 
 		it("feed downloaded", function(done) {
-			expect($(".feed > .entry-link")[0]).toExist();
+			expect($(feeds)[0]).toExist();
 			done();
 		});
 	});
@@ -107,15 +112,15 @@ $(function() {
 		var previousFeedFirstUrl;
 		beforeEach(function(done) {
 			loadFeed(0, function() {
-		 		previousFeedFirstUrl = $(".feed > .entry-link")[0].href;
+		 		previousFeedFirstUrl = $(feeds)[0].href;
 				loadFeed(1, function() {
 					done();
 				});
 			});
 		});
 		it("is loading new feed", function(done) {
-			expect($(".feed > .entry-link").length).not.toBe(0);
-			expect($(".feed > .entry-link")[0].href).not.toBe(previousFeedFirstUrl);
+			expect($(feeds)).length).not.toBe(0);
+			expect($(feeds)[0].href).not.toBe(previousFeedFirstUrl);
 			done();
 		});
 	});
